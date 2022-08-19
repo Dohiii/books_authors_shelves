@@ -1,6 +1,6 @@
 My pet project, CRUD application, you can import books by author name, and import authors from wikipedia.
 
-<img src="https://images.pexels.com/photos/694740/pexels-photo-694740.jpeg" alt="Alt text" title="Optional title">
+![9318](https://user-images.githubusercontent.com/77291884/165365277-c0d2b989-42be-4a75-8907-ca39e050263a.png)
 
 Endpoints: <br>
 /api/v1/register/ # no auth required <br>
