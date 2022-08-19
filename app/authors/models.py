@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.conf import settings
 # Create your models here.
 
 
@@ -11,14 +12,16 @@ class AuthorModel(models.Manager):
     @staticmethod
     def get_or_create_authors(data):
         print(data)
-        author_instance, created = Author.objects.get_or_create(name=data['name'])
+        author_instance, created = Author.objects.get_or_create(
+                                                name=data['name'])
         return author_instance, created
 
     @staticmethod
     def create_or_update_authors(authors):
         author_ids = []
         for author in authors:
-            author_instance, created = Author.objects.update_or_create(name=author['name'])
+            author_instance, created = Author.objects.update_or_create(
+                                                    name=author['name'])
             author_ids.append(author_instance.pk)
         return author_ids
 
@@ -36,6 +39,3 @@ class Author(models.Model):
 
     def __repr__(self):
         return self.name
-
-
-

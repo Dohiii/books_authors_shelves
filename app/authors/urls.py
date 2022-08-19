@@ -1,8 +1,22 @@
-from django.urls import re_path
-from authors.views import ImportAuthor
+"""
+URL mappings for the author app.
+"""
+from django.urls import (
+    path,
+    include,
+    re_path,
+)
+from authors.views import ImportAuthor, AuthorViewSet
+from rest_framework.routers import DefaultRouter
 
-app_name = "import_author"
+
+router = DefaultRouter()
+router.register('authors', AuthorViewSet)
+
+app_name = "authors"
 
 urlpatterns = [
-    re_path('import_author/', ImportAuthor.as_view(), name='import_author')
+    path('', include(router.urls)),
+    re_path('import_author/',
+            ImportAuthor.as_view(), name='import_author')
 ]

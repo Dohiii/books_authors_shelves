@@ -1,6 +1,6 @@
 import json
-
 import requests
+import wikipedia
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -28,8 +28,13 @@ def import_book_by_author(request):
             published_year = book["volumeInfo"]["publishedDate"][0:4]
 
             for author in books_data[i]["volumeInfo"]["authors"]:
-                author_object, created = Author.objects.get_or_create(name=author)
-                authors.append(author_object.__dict__)
+                page = wikipedia.page(f"{request.data['name']}(authors_writers)")
+                if page is not None:
+                    name = page.title
+                    wiki_url = page.url
+
+                    author_object, created = Author.custom_objects.get_or_create_authors({'name':name})
+                    authors.append(author_object.__dict__)
 
             payload = {
                 'authors': authors,

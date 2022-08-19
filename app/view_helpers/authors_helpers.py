@@ -5,13 +5,11 @@ from wikipedia.exceptions import DisambiguationError
 
 from authors.models import Author
 from authors.serializers import AuthorSerializer
-from view_helpers.books_helpers import import_book_by_author
 
 
 def import_author_from_wiki(request):
     try:
         page = wikipedia.page(f"{request.data['name']}(authors_writers)")
-        print(wikipedia.search(f"{request.data['name']}(authors_person)"))
         if page is not None:
             title = page.title
             wiki_url = page.url
@@ -27,8 +25,10 @@ def import_author_from_wiki(request):
                 serializer = AuthorSerializer(data=payload)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data, status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(serializer.data,
+                                    status.HTTP_201_CREATED)
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
     except DisambiguationError:
         return Response({'error': 'Please try another name'})
 
@@ -36,7 +36,6 @@ def import_author_from_wiki(request):
 def import_author_and_books(request):
     try:
         page = wikipedia.page(f"{request.data['name']}(authors_writers)")
-        print(wikipedia.search(f"{request.data['name']}(authors_person)"))
         if page is not None:
             title = page.title
             wiki_url = page.url
@@ -52,7 +51,9 @@ def import_author_and_books(request):
                 serializer = AuthorSerializer(data=payload)
                 if serializer.is_valid():
                     serializer.save()
-                    return Response(serializer.data, status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    return Response(serializer.data,
+                                    status.HTTP_201_CREATED)
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
     except DisambiguationError:
         return Response({'error': 'Please try another name'})

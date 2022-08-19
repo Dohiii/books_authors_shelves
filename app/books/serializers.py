@@ -29,7 +29,8 @@ class BookSerializer(serializers.ModelSerializer):
     def get_or_create_authors(authors):
         author_ids = []
         for author in authors:
-            author_instance, created = Author.objects.get_or_create(name=author['name'])
+            author_instance, created = Author.objects.get_or_create(
+                name=author['name'])
             author_ids.append(author_instance.pk)
         return author_ids
 
@@ -37,7 +38,8 @@ class BookSerializer(serializers.ModelSerializer):
     def create_or_update_authors(authors):
         author_ids = []
         for author in authors:
-            author_instance, created = Author.objects.update_or_create(name=author['name'])
+            author_instance, created = Author.objects.update_or_create(
+                name=author['name'])
             author_ids.append(author_instance.pk)
         return author_ids
 
@@ -62,9 +64,8 @@ class BookSerializer(serializers.ModelSerializer):
         for field in fields:
             try:
                 setattr(instance, field, validated_data[field])
-            except KeyError:  # validated_data may not contain all fields during HTTP PATCH
+            # validated_data may not contain all fields during HTTP PATCH
+            except KeyError:
                 pass
         instance.save()
         return instance
-
-

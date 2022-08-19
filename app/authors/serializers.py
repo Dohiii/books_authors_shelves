@@ -18,8 +18,6 @@ class AuthorSerializer(serializers.ModelSerializer):
         depth = 1
 
     def create(self, validated_data):
-        author, created = Author.custom_objects.get_or_create_authors(validated_data)
+        author, created = Author.custom_objects.get_or_create_authors(
+                                                        validated_data)
         return author
-
-
-

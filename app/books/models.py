@@ -1,13 +1,13 @@
 import uuid
-
 from django.db import models
 from authors.models import Author
+from django.conf import settings
 
 
 class Book(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4, editable=False)
-    external_id = models.CharField(max_length=255)
+    external_id = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255, null=True, default='Book')
     authors = models.ManyToManyField(Author, related_name='books',
                                      blank=True, unique=False)
@@ -22,6 +22,3 @@ class Book(models.Model):
 
     def __repr__(self):
         return self.title
-
-
-
