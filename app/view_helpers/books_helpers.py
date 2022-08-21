@@ -34,6 +34,7 @@ def import_book_by_author(request):
                     wiki_url = page.url
 
                     author_object, created = Author.custom_objects.get_or_create_authors({'name':name})
+                    author_object.wiki_url = wiki_url
                     authors.append(author_object.__dict__)
 
             payload = {

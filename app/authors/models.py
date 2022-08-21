@@ -11,7 +11,6 @@ class AuthorModel(models.Manager):
 
     @staticmethod
     def get_or_create_authors(data):
-        print(data)
         author_instance, created = Author.objects.get_or_create(
                                                 name=data['name'])
         return author_instance, created

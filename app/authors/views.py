@@ -35,9 +35,6 @@ class AuthorViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-    def perform_create(self, serializer):
-        serializer.save()
-
     def create(self, request, *args, **kwargs):
         """First check if Author already exist, if so, send response 409"""
         if Author.custom_objects.is_author_exist(request.data['name']):
@@ -46,9 +43,8 @@ class AuthorViewSet(viewsets.ModelViewSet):
         super().create(request, *args, **kwargs)
         return Response({'success': 'Author created'}, status=201)
 
-    def get_serializer_class(self):
-        """Return the Serializer class for request"""
-        if self.action == 'list':
-            return AuthorSerializer
-
-        return self.serializer_class
+    def update(self, request, *args, **kwargs):
+        if Author.custom_objects.is_author_exist(request.data['name']):
+            return Response({'error': 'Author already exist'}, status=409)
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)

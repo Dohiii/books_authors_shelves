@@ -1,7 +1,11 @@
 import uuid
 from django.db import models
 from authors.models import Author
-from django.conf import settings
+
+
+
+class Producto:
+    pass
 
 
 class Book(models.Model):
@@ -10,7 +14,9 @@ class Book(models.Model):
     external_id = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255, null=True, default='Book')
     authors = models.ManyToManyField(Author, related_name='books',
-                                     blank=True, unique=False)
+                                     blank=True, unique=False,
+                                     default=None,
+                                     )
     published_year = models.CharField(max_length=255, blank=True,
                                       null=True)
     pages = models.IntegerField(blank=True, null=True)

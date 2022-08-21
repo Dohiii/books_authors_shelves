@@ -40,12 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # third party apps
-    'rest_framework',
-    'drf_yasg',
-    'rest_framework_simplejwt',
+    'rest_framework',  # no comments needed :)
+    'drf_yasg',  # swagger documentation
+    'rest_framework_simplejwt',  # JWT tokens
     # my apps
     'authors',
     'books',
+    'profiles',
     'users',
 ]
 
@@ -135,4 +136,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 

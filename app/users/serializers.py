@@ -3,6 +3,9 @@ from django.contrib.auth import (
     get_user_model,
 )
 from rest_framework import serializers
+from rest_framework.response import Response
+
+from profiles.models import Profile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,12 +13,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ['email', 'password', 'name']
+        fields = ['id', 'email', 'password', 'name']
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
 
     def create(self, validated_data):
         """Create and return a user with encrypted password."""
-        return get_user_model().objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
+        """Create Profile"""
+        Profile.objects.create(
+            user=user,
+            username=user.name
+        )
+
+        return user
 
     def update(self, instance, validated_data):
         """Update and return user."""
