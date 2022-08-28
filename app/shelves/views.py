@@ -39,8 +39,3 @@ class ShelfAddBook(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Shelf.objects.filter(user=self.request.user.profile)
-
-    # def update(self, request, *args, **kwargs):
-    #     print('It was patched')
-    #     print(request.data)
-    #     return self.partial_update(request, *args, **kwargs)

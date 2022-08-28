@@ -40,16 +40,34 @@ Expected status  on success code :`204 No Content`
 
 Expected status  on fail code :`403 Forbitten` 
 
+## Import author:
 
+User can import Authors from Wiki API by Authors name.
+Possible that import will be incorrect by importing wrong article related to author.
 
+**PUT** single author (**Auth**)`/api/v1/import_author/`
 
+Payload example:
+```
+{
+    "name": [string:unique]
+}
+```
 
+Expected status code :`201 Created`
 
+*"invalid": "Author with this name already exist"*
+
+Expected status code :`400 Bad Request`
 
 ## Books:
 **GET** all books (**No Auth**) `/api/v1/books/`
 
+Expected status code :`200 OK`
+
 **GET** single book (**No Auth**) `/api/v1/books/{id}`
+
+Expected status code :`200 OK`
 
 **POST** single book (**Auth**)`/api/v1/books/`
 
@@ -93,18 +111,94 @@ Expected status  on success code :`204 No Content`
 Expected status  on fail code :`403 Forbitten` 
 
 
+## Import books:
+
+User can import book infor from Google API by authors name
+
+**PUT** multiple books by author name (**Auth**)`/api/v1/import_book/`
+
+Payload example:
+```
+{
+    "name": [string:unique]
+}
+```
+
+Expected response `{"imported": [int]}`
+
+Expected status code :`201 Created`
+
+*"invalid": "Author with this name already exist"*
+
+*"invalid": "Book with this external id already exist"*
+
+Expected status code :`400 Bad Request`
 
 
+## Profiles:
+**GET** all profiles (**Auth**) `/api/v1/profiles/`
 
+Expected status code :`200 OK`
 
+**GET** my profile need to be logged in no id needed (**Auth**) `/api/v1/profile/`
 
+Expected status code :`200 OK`
 
+**PATCH** no id needed (**Auth**) `/api/v1/profile/`
+
+#### Payload example (multiple books added):
+```
+{
+    "username": [string],
+}
+```
+
+Expected status code :`200 OK`
 
 
 ## Shelves:
 
-add books to shelf(id) by book id:
-`/api/v1/shelves/shelf_add/`
+**GET** all public shelves (**Auth**) `/api/v1/shelves_public/`
+
+Expected status code :`200 OK`
+
+**GET** all users shelves (needs to be logged in) (**Auth**) `/api/v1/shelves/`
+
+Expected status code :`200 OK`
+
+**GET** single shelf (**Auth**) `/api/v1/shelves/{id}`
+
+Expected status code :`200 OK`
+
+**PATCH** update shelf (**Auth**) `/api/v1/shelves/{id}`
+
+Expected status code :`200 OK`
+
+**POST** single book (**Auth**)`/api/v1/shelves/`
+
+Payload example:
+```
+{
+    "shelf_name": [string:unique],
+    "description": [text],
+    "access": [string:choise "PUBLIC" or "PRIVATE"]
+}
+```
+
+Expected status code :
+`201 Created`
+
+
+**DELETE** single shelf (**Auth**)`/api/v1/shelves/{id}`
+
+Expected status  on success code :`204 No Content`
+
+*User can delete only the shelf that he owns(add previously)*
+
+Expected status  on fail code :`403 Forbitten` 
+
+## Add Books to shelf(id) by book id:
+`/api/v1/shelves/shelf_add/{id}`
 
 #### Payload example (multiple books added):
 ```
@@ -121,11 +215,51 @@ add books to shelf(id) by book id:
 }
 ```
 
+## Users:
+
+
+**GET** logged-in user (**Auth**) `/api/v1/user_me/`
+
+Expected status code :`200 OK`
+
+**POST** Register/Create User (**Auth**) `/api/v1/register/`
+example payload:
+```
+{
+    "email": [email:unique],
+    "password": [string],
+    "name": [string]
+}
+```
+
+**POST** Login with user (**Auth**) `/api/v1/login/`
+example payload:
+```
+{
+    "email": [email],
+    "password": [string],
+}
+```
+expected status: `200 OK`
+
+expected body:
+`
+{
+    "refresh": [token],
+    "access": [token]
+}
+`
 
 
 
-Testing: <br>
-to see detailed tests and coverage report: coverage run manage.py test -v2 && coverage report
+
+
+
+
+
+Testing:
+
+to see detailed tests and coverage report: `coverage run manage.py test -v2 && coverage report`
 
 
 
