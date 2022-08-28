@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
         """Create Profile"""
         profile = Profile.objects.create(
             user=user,
-            username=user.name
+            username=user.email.split('@')[0]
         )
         """Create three Shelves"""
         Shelf.objects.create(

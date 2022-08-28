@@ -9,6 +9,7 @@ It is possible to make bookshelves collections, 3 shelf are there by default on 
 ## Users:
 
 **POST** Register/Create User (**NO Auth**) `/api/v1/register/`
+
 example payload:
 ```
 {
@@ -19,6 +20,7 @@ example payload:
 ```
 
 **POST** Login with user (**Auth**) `/api/v1/login/`
+
 example payload:
 ```
 {
@@ -35,6 +37,7 @@ expected body:
     "access": [token]
 }
 `
+
 **GET** logged-in user (**Auth**) `/api/v1/user_me/`
 
 Expected status code :`200 OK`

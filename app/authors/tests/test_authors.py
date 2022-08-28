@@ -9,7 +9,7 @@ from profiles.models import Profile
 from tests_helpers import AUTHORS_URL, \
     create_author, \
     create_user, \
-    detail_url
+    author_detail_url
 
 
 class PublicAuthorsApiTests(TestCase):
@@ -84,7 +84,7 @@ class PrivateAuthorsTests(TestCase):
 
     def test_get_single_author(self):
         author = create_author(user=self.user.profile)
-        url = detail_url(author.id)
+        url = author_detail_url(author.id)
         res = self.client.get(url)
         serializer = AuthorSerializer(author)
 
@@ -120,7 +120,7 @@ class PrivateAuthorsTests(TestCase):
         manakin = create_author(user=self.user.profile, name='Manakin')
 
         payload = {'name': 'Mr. Manakin'}
-        res = self.client.patch(detail_url(manakin.id), payload)
+        res = self.client.patch(author_detail_url(manakin.id), payload)
         # serializer = AuthorSerializer(new_data)
 
         # self.assertEqual(res.data, serializer.data)
@@ -135,7 +135,7 @@ class PrivateAuthorsTests(TestCase):
         create_author(user=self.user.profile, name='Author2')
 
         payload = {'name': 'Author2'}
-        res = self.client.patch(detail_url(author1.id), payload)
+        res = self.client.patch(author_detail_url(author1.id), payload)
 
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -147,7 +147,7 @@ class PrivateAuthorsTests(TestCase):
             'name': 'Author2',
         }
 
-        res = self.client.patch(detail_url(author1.id), payload)
+        res = self.client.patch(author_detail_url(author1.id), payload)
 
         self.assertEqual(res.data['id'], str(author1.id))
         self.assertNotEqual(res.data['id'], payload['id'])
@@ -158,7 +158,7 @@ class PrivateAuthorsTests(TestCase):
             "name": "J J Filips",
             "wiki_url": "http://www.example.com"
             }
-        res = self.client.put(detail_url(author.id), payload)
+        res = self.client.put(author_detail_url(author.id), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         author.refresh_from_db()
 
@@ -177,7 +177,7 @@ class PrivateAuthorsTests(TestCase):
     def test_delete_author(self):
         author = create_author(user=self.user.profile, name='Ford')
         self.assertEqual(Author.objects.all().count(), 1)
-        self.client.delete(detail_url(author.id))
+        self.client.delete(author_detail_url(author.id))
         self.assertEqual(Author.objects.all().count(), 0)
 
     def test_delete_author_you_owned(self):
@@ -187,7 +187,7 @@ class PrivateAuthorsTests(TestCase):
         author2 = create_author(user=profile2, name='Author1')
 
         """ Try to delete not the author you created(Invalid)"""
-        url = detail_url(author2.id)
+        url = author_detail_url(author2.id)
 
         res = self.client.delete(url)
 
@@ -195,7 +195,7 @@ class PrivateAuthorsTests(TestCase):
         self.assertEqual(res.data, {"invalid": "You can delete only your items"})
 
         """ Try to delete the author you created(Success)"""
-        url2 = detail_url(author1.id)
+        url2 = author_detail_url(author1.id)
 
         res = self.client.delete(url2)
 

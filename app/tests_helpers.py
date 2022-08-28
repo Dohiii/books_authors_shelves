@@ -9,9 +9,13 @@ AUTHORS_URL = reverse('authors:author-list')
 BOOKS_URL = reverse('books:book-list')
 IMPORT_URL = '/api/v1/import_author/'
 IMPORT_BOOKS_URL = '/api/v1/import_book/'
+SHELVES_PUBLIC_URL = '/api/v1/shelves_public/'
+SHELVES_URL = '/api/v1/shelves/'
+PROFILES_URL = '/api/v1/profiles/'
+PROFILE_URL = '/api/v1/profile/'
 
 
-def detail_url(obj_id):
+def author_detail_url(obj_id):
     """Create and return an author detail URL."""
     return reverse('authors:author-detail', args=[obj_id])
 
