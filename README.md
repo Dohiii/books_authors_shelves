@@ -6,6 +6,64 @@ It is possible to make bookshelves collections, 3 shelf are there by default on 
 
 # Endpoints
 
+## Users:
+
+
+**GET** logged-in user (**Auth**) `/api/v1/user_me/`
+
+Expected status code :`200 OK`
+
+**POST** Register/Create User (**Auth**) `/api/v1/register/`
+example payload:
+```
+{
+    "email": [email:unique],
+    "password": [string],
+    "name": [string]
+}
+```
+
+**POST** Login with user (**Auth**) `/api/v1/login/`
+example payload:
+```
+{
+    "email": [email],
+    "password": [string],
+}
+```
+expected status: `200 OK`
+
+expected body:
+`
+{
+    "refresh": [token],
+    "access": [token]
+}
+`
+
+## Profiles:
+
+*Profile get created automatically as user got created and is used as owner for Authors/Books/Shelves created by user*
+
+**GET** all profiles (**Auth**) `/api/v1/profiles/`
+
+Expected status code :`200 OK`
+
+**GET** my profile need to be logged in no id needed (**Auth**) `/api/v1/profile/`
+
+Expected status code :`200 OK`
+
+**PATCH** no id needed (**Auth**) `/api/v1/profile/`
+
+#### Payload example (multiple books added):
+```
+{
+    "username": [string],
+}
+```
+
+Expected status code :`200 OK`
+
 ## Authors:
 **GET** all books (**No Auth**) `/api/v1/authors/`
 
@@ -135,25 +193,7 @@ Expected status code :`201 Created`
 Expected status code :`400 Bad Request`
 
 
-## Profiles:
-**GET** all profiles (**Auth**) `/api/v1/profiles/`
 
-Expected status code :`200 OK`
-
-**GET** my profile need to be logged in no id needed (**Auth**) `/api/v1/profile/`
-
-Expected status code :`200 OK`
-
-**PATCH** no id needed (**Auth**) `/api/v1/profile/`
-
-#### Payload example (multiple books added):
-```
-{
-    "username": [string],
-}
-```
-
-Expected status code :`200 OK`
 
 
 ## Shelves:
@@ -215,40 +255,7 @@ Expected status  on fail code :`403 Forbitten`
 }
 ```
 
-## Users:
 
-
-**GET** logged-in user (**Auth**) `/api/v1/user_me/`
-
-Expected status code :`200 OK`
-
-**POST** Register/Create User (**Auth**) `/api/v1/register/`
-example payload:
-```
-{
-    "email": [email:unique],
-    "password": [string],
-    "name": [string]
-}
-```
-
-**POST** Login with user (**Auth**) `/api/v1/login/`
-example payload:
-```
-{
-    "email": [email],
-    "password": [string],
-}
-```
-expected status: `200 OK`
-
-expected body:
-`
-{
-    "refresh": [token],
-    "access": [token]
-}
-`
 
 
 
