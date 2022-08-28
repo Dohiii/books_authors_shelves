@@ -1,6 +1,7 @@
 # Create your views here.
-
-from rest_framework import viewsets
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
+from rest_framework import viewsets, status
 from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny,
@@ -35,16 +36,15 @@ class AuthorViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-    def create(self, request, *args, **kwargs):
-        """First check if Author already exist, if so, send response 409"""
-        if Author.custom_objects.is_author_exist(request.data['name']):
-            return Response({'error': 'Author already exist'}, status=409)
-        """If author does not exist, one are created with a status.code 201"""
-        super().create(request, *args, **kwargs)
-        return Response({'success': 'Author created'}, status=201)
+    def perform_create(self, serializer):
+        """Create new recipe"""
+        serializer.save(user=self.request.user.profile)
 
-    def update(self, request, *args, **kwargs):
-        if Author.custom_objects.is_author_exist(request.data['name']):
-            return Response({'error': 'Author already exist'}, status=409)
-        kwargs['partial'] = True
-        return super().update(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        item = self.get_object()
+        if item.user == self.request.user.profile:
+            item.delete()
+            return Response({'success': 'Item was deleted'},
+                            status=status.HTTP_204_NO_CONTENT)
+        return Response({'invalid': 'You can delete only your items'},
+                        status=status.HTTP_403_FORBIDDEN)

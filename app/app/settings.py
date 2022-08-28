@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'authors',
     'books',
     'profiles',
+    'shelves',
     'users',
 ]
 

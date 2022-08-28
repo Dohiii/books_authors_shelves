@@ -3,15 +3,22 @@ from django.urls import reverse
 
 from authors.models import Author
 from books.models import Book
+from profiles.models import Profile
 
 AUTHORS_URL = reverse('authors:author-list')
 BOOKS_URL = reverse('books:book-list')
 IMPORT_URL = '/api/v1/import_author/'
+IMPORT_BOOKS_URL = '/api/v1/import_book/'
 
 
-def detail_url(author_id):
-    """Create and return a recipe detail URL."""
-    return reverse('authors:author-detail', args=[author_id])
+def detail_url(obj_id):
+    """Create and return an author detail URL."""
+    return reverse('authors:author-detail', args=[obj_id])
+
+
+def book_detail_url(obj_id):
+    """Create and return a book detail URL."""
+    return reverse('books:book-detail', args=[obj_id])
 
 
 def create_user(**params):
@@ -19,10 +26,16 @@ def create_user(**params):
     return get_user_model().objects.create_user(**params)
 
 
-def create_author(name='Mark Twain',
+def create_profile(user, **params):
+    profile = Profile.objects.create(user=user, **params)
+    return profile
+
+
+def create_author(user, name='Mark Twain',
                   wiki_url='https://pl.wikipedia.org/wiki/J.R.R._Tolkien'):
     """Create and return a sample author."""
     defaults = {
+        'user': user,
         'name': name,
         'wiki_url': wiki_url,
     }
@@ -31,9 +44,10 @@ def create_author(name='Mark Twain',
     return author
 
 
-def create_book(**kwargs):
+def create_book(user, **kwargs):
     """Create and return a sample author."""
     defaults = {
+        'user': user,
         "external_id": "sfas12412",
         "title": "Box And Toys 2",
         "published_year": "2004",

@@ -53,5 +53,6 @@ urlpatterns = [
     path('api/v1/', include('authors.urls')),
     path('api/v1/', include('books.urls')),
     path('api/v1/', include('profiles.urls')),
+    path('api/v1/', include('shelves.urls')),
     path('api/v1/', include('users.urls')),
 ]

@@ -6,6 +6,7 @@ from rest_framework import serializers
 from rest_framework.response import Response
 
 from profiles.models import Profile
+from shelves.models import Shelf
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,9 +21,22 @@ class UserSerializer(serializers.ModelSerializer):
         """Create and return a user with encrypted password."""
         user = get_user_model().objects.create_user(**validated_data)
         """Create Profile"""
-        Profile.objects.create(
+        profile = Profile.objects.create(
             user=user,
             username=user.name
+        )
+        """Create three Shelves"""
+        Shelf.objects.create(
+            user=profile,
+            shelf_name='Currently Reading'
+        )
+        Shelf.objects.create(
+            user=profile,
+            shelf_name='To-Read'
+        )
+        Shelf.objects.create(
+            user=profile,
+            shelf_name='Read'
         )
 
         return user

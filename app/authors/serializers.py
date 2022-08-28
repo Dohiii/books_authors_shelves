@@ -1,9 +1,18 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
+
 from authors.models import Author
 
 
 class AuthorSerializer(serializers.ModelSerializer):
     books = serializers.StringRelatedField(read_only=True, many=True)
+    name = serializers.CharField(max_length=255,
+                                 validators=[UniqueValidator(
+                                     queryset=Author.objects.all(),
+                                     message={
+                                         'invalid': 'Author with this name already exist'
+                                     })],
+                                 )
 
     class Meta:
         model = Author
@@ -13,16 +22,17 @@ class AuthorSerializer(serializers.ModelSerializer):
             "wiki_url",
             'books',
                   ]
+        read_only_fields = ['id']
+
         extra_kwargs = {
-            'name': {'validators': []},
+            'name': {
+                'validators': [],
+                },
+
         }
         depth = 1
 
-    def create(self, validated_data):
-        author, created = Author.custom_objects.get_or_create_authors(
-                                                        validated_data)
-        return author
-
+    #
     def update(self, instance, validated_data):
         fields = [
             'name',
