@@ -1,11 +1,7 @@
-# Create your views here.
-from django.core.exceptions import ObjectDoesNotExist
-from django.http import Http404
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny,
-    IsAdminUser,
     )
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -16,7 +12,6 @@ from rest_framework import generics
 
 
 class ImportAuthor(generics.GenericAPIView):
-    # permission_classes = [permissions.IsAdminUser]
     serializer_class = AuthorSerializer
     authentication_classes = [JWTAuthentication]
 
@@ -28,6 +23,9 @@ class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
     authentication_classes = [JWTAuthentication]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['name']
+    ordering_fields = ['name']
 
     def get_permissions(self):
         if self.action == 'list' or self.action == 'retrieve':

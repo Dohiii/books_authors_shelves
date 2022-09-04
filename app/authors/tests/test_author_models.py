@@ -38,4 +38,3 @@ class AuthorModelTests(TestCase):
         create_author(user=self.user.profile, name='Tolkien')
         author = Author.objects.filter(name='Tolkien').first()
         self.assertEqual(author.name, author.__str__())
-

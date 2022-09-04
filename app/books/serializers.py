@@ -1,5 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import IntegrityError
 from rest_framework import serializers
 from books.models import Book
 from authors.models import Author
@@ -60,7 +59,8 @@ class BookSerializer(serializers.ModelSerializer):
         auth_list = []
 
         for author in authors_data:
-            auth_list.append(Author.objects.create(user=book.user, **author))
+            auth_list.append(Author.objects.create(user=book.user,
+                                                   **author))
 
         book.authors.set(auth_list)
 
@@ -81,7 +81,8 @@ class BookSerializer(serializers.ModelSerializer):
                 obj.name = validated_data['name']
                 obj.wiki_url = validated_data['wiki_url']
             except ObjectDoesNotExist:
-                auth_list.append(Author.objects.create(user=user.profile, **author))
+                auth_list.append(Author.objects.create(user=user.profile,
+                                                       **author))
         instance.authors.set(auth_list)
         fields = [
             'id',

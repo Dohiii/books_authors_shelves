@@ -192,7 +192,8 @@ class PrivateAuthorsTests(TestCase):
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(res.data, {"invalid": "You can delete only your items"})
+        self.assertEqual(res.data, {"invalid":
+                                    "You can delete only your items"})
 
         """ Try to delete the author you created(Success)"""
         url2 = author_detail_url(author1.id)
@@ -201,6 +202,3 @@ class PrivateAuthorsTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(res.data, {'success': 'Item was deleted'})
-
-
-

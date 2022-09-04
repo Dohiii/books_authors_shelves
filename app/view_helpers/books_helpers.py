@@ -41,10 +41,13 @@ def import_book_by_author(request):
 
                 for author in books_data[i]["volumeInfo"]["authors"]:
                     try:
-                        author_data = Author.objects.create(name=author, user=request.user.profile)
+                        author_data = Author.objects.create(
+                            name=author,
+                            user=request.user.profile)
                         authors.append(author_data)
                     except IntegrityError:
-                        author_data = Author.objects.filter(name=author).first()
+                        author_data = Author.objects.\
+                            filter(name=author).first()
                         authors.append(author_data)
 
                 book.authors.set(authors)

@@ -33,8 +33,8 @@ class ShelfAddBookSerializer(serializers.ModelSerializer):
         }
 
     def update(self, instance, validated_data):
-        print(dir(validated_data))
-        print(len(validated_data['books'][0].items()))
+        # print(dir(validated_data))
+        # print(len(validated_data['books'][0].items()))
 
         books_data = validated_data.pop('books', [])
         print(books_data)
@@ -47,10 +47,9 @@ class ShelfAddBookSerializer(serializers.ModelSerializer):
 
         for book in books_data:
             try:
-                obj = Book.objects.get(id=book['book_id'])
+                obj = Book.objects.get(external_id=book['external_id'])
                 books_list.append(obj)
-                # obj.name = validated_data['name']
-                # obj.wiki_url = validated_data['wiki_url']
+
             except KeyError:
                 print('Oh no')
 

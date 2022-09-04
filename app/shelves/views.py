@@ -15,12 +15,23 @@ class ListPublicShelves(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 
+class GetShelfOfFriend(generics.RetrieveAPIView):
+    queryset = Shelf.objects.all()
+    serializer_class = ShelfSerializer
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request, *args, **kwargs):
+        friends_shelf_data = request.data['friends_shelf']
+        print(friends_shelf_data)
+
+
 class ShelfViewSet(viewsets.ModelViewSet):
     """Main View for Shelf Logic"""
     queryset = Shelf.objects.all()
     serializer_class = ShelfSerializer
     authentication_classes = [JWTAuthentication]
     http_method_names = ['get', 'post', 'patch', 'delete']
+    lookup_url_kwarg = "uid"
 
     def get_queryset(self):
         return Shelf.objects.filter(user=self.request.user.profile)

@@ -1,14 +1,13 @@
 from rest_framework.permissions import (
     IsAuthenticated,
     AllowAny,
-    IsAdminUser,
     )
 from rest_framework.response import Response
 
 from books.filters import BooksFilter
 from books.models import Book
 from books.serializers import BookSerializer, BookListSerializer
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework import generics
 from view_helpers.books_helpers import import_book_by_author
 from authors.serializers import AuthorSerializer
@@ -33,6 +32,9 @@ class BookViewSet(viewsets.ModelViewSet):
     filterset_class = BooksFilter
     authentication_classes = [JWTAuthentication]
     http_method_names = ['get', 'post', 'patch', 'delete']
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title']
+    ordering_fields = ['title', 'published_year']
 
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:

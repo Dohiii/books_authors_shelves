@@ -45,8 +45,10 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui(
         'redoc', cache_timeout=0), name='schema-redoc'),
     # JWT Token urls
-    path('api/v1/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/v1/login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/v1/login/', TokenObtainPairView.as_view(),
+         name='token_obtain_pair'),
+    path('api/v1/login/refresh/', TokenRefreshView.as_view(),
+         name='token_refresh'),
 
     # Api urls
     path('admin/', admin.site.urls),

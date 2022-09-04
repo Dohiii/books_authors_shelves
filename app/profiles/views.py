@@ -37,32 +37,33 @@ class ProfileReadUpdateView(generics.RetrieveUpdateAPIView):
 class FollowProfile(generics.CreateAPIView):
     serializer_class = ProfileSerializer
     queryset = ProfileFollowing.objects.all()
-    # serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
     def post(self, request, *args, **kwargs):
+        if str(self.request.user.profile.id) == \
+                request.data['profile_to_follow']:
+            return Response({'invalid': 'You can not follow yourself.'},
+                            status.HTTP_400_BAD_REQUEST)
+
         try:
             to_follow_id = request.data['profile_to_follow']
             to_follow = Profile.objects.get(id=to_follow_id)
         except ValidationError:
-            return Response({'invalid': f'This is not a valid ID'},
+            return Response({'invalid': 'This is not a valid ID'},
                             status.HTTP_400_BAD_REQUEST)
 
         try:
             ProfileFollowing.objects.create(user_id=self.request.user.profile,
                                             following_user_id=to_follow)
-            return Response({'success': f'{self.request.user.profile} followed {to_follow}'})
+            return Response({'success':
+                            f'{self.request.user.profile} followed {to_follow}'
+                             })
         except IntegrityError:
-            return Response({'invalid': f'You already follow {to_follow}'},
-                            status.HTTP_400_BAD_REQUEST)
-
-        # followers_of_to_follow_object = to_follow.followers.all()
-        #
-        # for follower in followers_of_to_follow_object.all():
-        #     if follower.user_id.id:
-        #         return Response({'invalid': f'You already follow {to_follow}'},
-        #                         status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {
+                    'invalid': f'You already follow {to_follow}'
+                }, status.HTTP_400_BAD_REQUEST)
 
 
 class UnFollowProfile(generics.DestroyAPIView):
@@ -77,14 +78,18 @@ class UnFollowProfile(generics.DestroyAPIView):
             to_unfollow_id = request.data['profile_to_unfollow']
             to_unfollow = Profile.objects.get(id=to_unfollow_id)
         except ValidationError:
-            return Response({'invalid': f'This is not a valid ID'},
+            return Response({'invalid': 'This is not a valid ID'},
                             status.HTTP_400_BAD_REQUEST)
         print(to_unfollow)
 
         try:
-            ProfileFollowing.objects.get(user_id=self.request.user.profile,
-                                         following_user_id=to_unfollow).delete()
-            return Response({'success': f'{self.request.user.profile} unfollowed {to_unfollow}'})
+            ProfileFollowing.objects.get(
+                user_id=self.request.user.profile,
+                following_user_id=to_unfollow).delete()
+            return Response({
+                'success':
+                f'{self.request.user.profile} unfollowed {to_unfollow}'
+            })
         except ObjectDoesNotExist:
             return Response({'invalid': f'You do not follow {to_unfollow}'},
                             status.HTTP_400_BAD_REQUEST)

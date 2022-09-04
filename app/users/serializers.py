@@ -3,8 +3,6 @@ from django.contrib.auth import (
     get_user_model,
 )
 from rest_framework import serializers
-from rest_framework.response import Response
-
 from profiles.models import Profile
 from shelves.models import Shelf
 

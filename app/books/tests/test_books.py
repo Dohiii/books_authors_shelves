@@ -1,10 +1,7 @@
 """Test for recipe APIs."""
-import json
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-
-from authors.models import Author
 from books.models import Book
 from books.serializers import BookSerializer
 from profiles.models import Profile
@@ -43,7 +40,8 @@ class PublicBooksApiTests(TestCase):
 class PrivateBooksTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = create_user(email='user@example.com', password='pass123')
+        self.user = create_user(email='user@example.com',
+                                password='pass123')
         self.profile = create_profile(user=self.user, username='Val')
         self.client.force_authenticate(self.user)
 
@@ -88,8 +86,10 @@ class PrivateBooksTests(TestCase):
 
     def test_retrieve_books_limited_to_user(self):
         """Test Get ALL books"""
-        other_user = create_user(email='other@example.com', password='pass123')
-        other_profile = create_profile(user=other_user, username='Babum')
+        other_user = create_user(email='other@example.com',
+                                 password='pass123')
+        other_profile = create_profile(user=other_user,
+                                       username='Babum')
 
         create_book(user=self.profile)
         create_book(user=self.profile, external_id='assf442')
@@ -117,10 +117,14 @@ class PrivateBooksTests(TestCase):
         self.assertEqual(Book.objects.all().count(), 0)
 
     def test_delete_book_you_owned(self):
-        book1 = create_book(user=self.user.profile, external_id='saf23ff')
-        user2 = create_user(email='user2@example.com', password='pass123')
-        profile2 = Profile.objects.create(user=user2, username='Mommy')
-        book2 = create_book(user=profile2, external_id='safa3224')
+        book1 = create_book(user=self.user.profile,
+                            external_id='saf23ff')
+        user2 = create_user(email='user2@example.com',
+                            password='pass123')
+        profile2 = Profile.objects.create(user=user2,
+                                          username='Mommy')
+        book2 = create_book(user=profile2,
+                            external_id='safa3224')
 
         """ Try to delete not the author you created(Invalid)"""
         url = book_detail_url(book2.id)
@@ -128,7 +132,8 @@ class PrivateBooksTests(TestCase):
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(res.data, {"invalid": "You can delete only your items"})
+        self.assertEqual(res.data, {"invalid":
+                                    "You can delete only your items"})
 
         """ Try to delete the author you created(Success)"""
         url2 = book_detail_url(book1.id)
@@ -137,5 +142,3 @@ class PrivateBooksTests(TestCase):
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(res.data, {'success': 'Item was deleted'})
-
-

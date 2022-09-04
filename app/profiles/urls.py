@@ -1,7 +1,7 @@
 """
-URL mappings for a user API.
+URL mappings for a profile API.
 """
-from django.urls import path, include
+from django.urls import path
 from profiles.views import (
     ProfileReadUpdateView,
     ProfilesListView,
@@ -13,8 +13,12 @@ from profiles.views import (
 app_name = 'profile'
 
 urlpatterns = [
-    path('profile/', ProfileReadUpdateView.as_view(), name='profile'),
-    path('profiles/', ProfilesListView.as_view(), name='profile-list'),
-    path('profiles/follow/', FollowProfile.as_view(), name='profile-follow'),
-    path('profiles/unfollow/', UnFollowProfile.as_view(), name='profile-unfollow'),
+    path('profile/', ProfileReadUpdateView.as_view(),
+         name='profile'),
+    path('profiles/', ProfilesListView.as_view(),
+         name='profile-list'),
+    path('profiles/follow/', FollowProfile.as_view(),
+         name='profile-follow'),
+    path('profiles/unfollow/', UnFollowProfile.as_view(),
+         name='profile-unfollow'),
 ]

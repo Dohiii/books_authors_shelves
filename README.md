@@ -67,6 +67,44 @@ Expected status code :`200 OK`
 
 Expected status code :`200 OK`
 
+## Profiles Follow/Unfollow:
+
+*functionality to follow and unfollow user. *
+
+**POST** Follow profile by profiles id (**Auth**) `/api/v1/profiles/follow/`
+
+example payload:
+```
+{
+    "profile_to_follow": [uuid]
+}
+```
+expected status: `200 OK`
+
+expected body:
+`
+{
+    "success": "[you] followed [user_to_follow_name]"
+}
+`
+**DELETE Unfollow profile by profiles id (**Auth**) `/api/v1/profiles/unfollow/`
+
+example payload:
+```
+{
+    "profile_to_unfollow": [uuid]
+}
+```
+expected status: `204 Not exist`
+
+expected body:
+`
+{
+    "success": "[you] unfollowed [user_to_follow_name]"
+}
+`
+
+
 ## Authors:
 **GET** all books (**No Auth**) `/api/v1/authors/`
 
@@ -201,7 +239,7 @@ Expected status code :`400 Bad Request`
 
 ## Shelves:
 
-**GET** all public shelves (**Auth**) `/api/v1/shelves_public/`
+**GET** all public shelves (**Auth**) `/api/v1/shelves/public/`
 
 Expected status code :`200 OK`
 
@@ -248,10 +286,10 @@ Expected status  on fail code :`403 Forbitten`
 {
     "books": [
         {
-        "book_id": [book_id]
+        "external_id": [external_id]
         },
         {
-        "book_id": [book_id]
+        "external_id": [external_id]
         },
         .....
     ]

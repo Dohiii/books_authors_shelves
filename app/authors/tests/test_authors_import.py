@@ -2,12 +2,8 @@
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-from wikipedia.exceptions import PageError
 from tests_helpers import IMPORT_URL
-from tests_helpers import AUTHORS_URL, \
-    create_author, \
-    create_user, \
-    create_profile
+from tests_helpers import create_user, create_profile
 
 
 class ImportAuthorsPublic(TestCase):
@@ -25,7 +21,8 @@ class ImportAuthorsPublic(TestCase):
 class ImportAuthorsPrivate(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = create_user(email='user@example.com', password='pass123')
+        self.user = create_user(email='user@example.com',
+                                password='pass123')
         self.profile = create_profile(user=self.user, username='Val')
         self.client.force_authenticate(self.user)
 
@@ -64,7 +61,3 @@ class ImportAuthorsPrivate(TestCase):
         self.assertEqual(res2.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(res2.data['name'],
                          {"invalid": "Author with this name already exist"})
-
-
-
-

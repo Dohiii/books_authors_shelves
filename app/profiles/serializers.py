@@ -1,21 +1,37 @@
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
-
 from profiles.models import Profile, ProfileFollowing
-from shelves.models import Shelf
 
 
 class FollowingSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField("get_username")
 
     class Meta:
         model = ProfileFollowing
-        fields = ["following_user_id", "created"]
+        fields = [
+            "username",
+            "following_user_id",
+            "created",
+        ]
+
+    @staticmethod
+    def get_username(obj):
+        return obj.following_user_id.username
 
 
 class FollowersSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField("get_username")
+
     class Meta:
         model = ProfileFollowing
-        fields = ["user_id", "created"]
+        fields = [
+            "username",
+            "user_id",
+            "created",
+        ]
+
+    @staticmethod
+    def get_username(obj):
+        return obj.user_id.username
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -37,8 +53,10 @@ class ProfileSerializer(serializers.ModelSerializer):
                                             read_only=True
                                             )
 
-
-    """Nice Looking serializer of following object. Need to add that to details only serializer"""
+    """
+    Nice Looking serializer of following object.
+    Need to add that to details only serializer
+    """
     # following = serializers.SerializerMethodField()
     # followers = serializers.SerializerMethodField()
 
@@ -123,8 +141,10 @@ class ProfileDetailedSerializer(serializers.ModelSerializer):
     # def create(self, validated_data):
     #     return Profile.objects.create(**validated_data)
 
-    def get_following(self, obj):
+    @staticmethod
+    def get_following(obj):
         return FollowingSerializer(obj.following.all(), many=True).data
 
-    def get_followers(self, obj):
+    @staticmethod
+    def get_followers(obj):
         return FollowersSerializer(obj.followers.all(), many=True).data

@@ -2,11 +2,18 @@ import uuid
 from django.db import models
 from users.models import User
 from django.utils.translation import gettext as _
+from django.db.models import Count
+
+
+class ProfileManager(models.Manager):
+    @staticmethod
+    def profile_with_most_followers():
+        return Profile.objects.annotate(num_followers=Count(
+            'followers')).order_by('followers')
 
 
 class Profile(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User,
                                 related_name="profile",
                                 on_delete=models.CASCADE)
@@ -24,6 +31,9 @@ class Profile(models.Model):
     number = models.CharField(max_length=32, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     zip = models.CharField(max_length=30, null=True, blank=True)
+
+    objects = models.Manager()  # The default manager.
+    profile_objects = ProfileManager()  # The Profile-specific manager.
 
     class Meta:
         verbose_name = _('Profile')
@@ -45,11 +55,13 @@ class ProfileFollowing(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['user_id', 'following_user_id'], name="unique_followers")
+            models.UniqueConstraint(fields=[
+                'user_id',
+                'following_user_id'],
+                name="unique_followers")
         ]
 
         ordering = ["-created"]
 
     def __str__(self):
         return f"{self.user_id} follows {self.following_user_id}"
-

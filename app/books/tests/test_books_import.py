@@ -2,13 +2,8 @@
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIClient
-from books.models import Book
-from books.serializers import BookSerializer
 from tests_helpers import IMPORT_BOOKS_URL, \
-    BOOKS_URL, \
     create_user, \
-    create_book, \
-    create_author, \
     create_profile
 
 
@@ -20,7 +15,8 @@ class PublicBooksImportTests(TestCase):
     def test_auth_get_not_required(self):
         res = self.client.get(IMPORT_BOOKS_URL)
 
-        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(res.status_code,
+                         status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_auth_post_required(self):
         payload = {
@@ -28,15 +24,18 @@ class PublicBooksImportTests(TestCase):
         }
         res = self.client.post(IMPORT_BOOKS_URL, payload)
 
-        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(res.status_code,
+                         status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class PrivateBooksImportTests(TestCase):
     """Test Authorised API requests"""
     def setUp(self):
         self.client = APIClient()
-        self.user = create_user(email='user@example.com', password='pass123')
-        self.profile = create_profile(user=self.user, username='Val')
+        self.user = create_user(email='user@example.com',
+                                password='pass123')
+        self.profile = create_profile(user=self.user,
+                                      username='Val')
         self.client.force_authenticate(self.user)
 
     def test_no_post_allowed(self):
@@ -44,7 +43,8 @@ class PrivateBooksImportTests(TestCase):
             'name': 'Tolkien'
         }
         res = self.client.post(IMPORT_BOOKS_URL, payload)
-        self.assertEqual(res.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(res.status_code,
+                         status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_no_author_exist_error(self):
         payload = {

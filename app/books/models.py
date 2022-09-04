@@ -5,13 +5,13 @@ from profiles.models import Profile
 
 
 class Book(models.Model):
-    id = models.UUIDField(primary_key=True,
-                          default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='added_books')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE,
+                             related_name='added_books')
     external_id = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=255, null=True, default='Book')
     authors = models.ManyToManyField(Author, related_name='books',
-                                     null=True
+                                     blank=True
                                      )
     published_year = models.CharField(max_length=255, blank=True,
                                       null=True)

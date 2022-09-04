@@ -10,7 +10,8 @@ class AuthorSerializer(serializers.ModelSerializer):
                                  validators=[UniqueValidator(
                                      queryset=Author.objects.all(),
                                      message={
-                                         'invalid': 'Author with this name already exist'
+                                         'invalid': 'Author with this '
+                                                    'name already exist'
                                      })],
                                  )
 
@@ -46,9 +47,3 @@ class AuthorSerializer(serializers.ModelSerializer):
                 pass
         instance.save()
         return instance
-
-
-
-
-
-

@@ -4,6 +4,7 @@ from django.urls import reverse
 from authors.models import Author
 from books.models import Book
 from profiles.models import Profile
+from shelves.models import Shelf
 
 AUTHORS_URL = reverse('authors:author-list')
 BOOKS_URL = reverse('books:book-list')
@@ -25,6 +26,11 @@ def book_detail_url(obj_id):
     return reverse('books:book-detail', args=[obj_id])
 
 
+def profile_detail_url(obj_id):
+    """Create and return a book detail URL."""
+    return reverse('profile:profile', args=[obj_id])
+
+
 def create_user(**params):
     """Create and return a new user."""
     return get_user_model().objects.create_user(**params)
@@ -33,6 +39,18 @@ def create_user(**params):
 def create_profile(user, **params):
     profile = Profile.objects.create(user=user, **params)
     return profile
+
+
+def create_shelf(user, **kwargs):
+    defaults = {
+        'user': user,
+        "shelf_name": "Shelf It is ",
+        "description": "What is this?",
+        "access": "PUBLIC"
+    }
+    defaults.update(kwargs)
+    shelf = Shelf.objects.create(**defaults)
+    return shelf
 
 
 def create_author(user, name='Mark Twain',

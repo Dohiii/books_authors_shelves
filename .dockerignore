@@ -1,0 +1,9 @@
+*
+!Cargo.toml
+!Cargo.lock
+!src
+!setup.py
+!README.md
+!project
+!requirements
+__pycache__
